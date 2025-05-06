@@ -1,0 +1,4 @@
+C:/development/Projects/Properties-Recon/build/CMakeFiles/Properties-Recon.dir
+C:/development/Projects/Properties-Recon/build/CMakeFiles/INSTALL.dir
+C:/development/Projects/Properties-Recon/build/CMakeFiles/ALL_BUILD.dir
+C:/development/Projects/Properties-Recon/build/CMakeFiles/ZERO_CHECK.dir

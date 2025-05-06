@@ -1,0 +1,10 @@
+^C:\DEVELOPMENT\PROJECTS\PROPERTIES-RECON\BUILD\CMAKEFILES\10F5BF218E6CAF80AFA9DBC60635D932\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/development/Projects/Properties-Recon -BC:/development/Projects/Properties-Recon/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/development/Projects/Properties-Recon/build/Properties-Recon.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

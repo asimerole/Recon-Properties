@@ -1,0 +1,9 @@
+C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/Properties-Recon.dir
+C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
+C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
+C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/list_install_components.dir
+C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/install.dir
+C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/install/local.dir
+C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/install/strip.dir
+C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/Properties-Recon_autogen_timestamp_deps.dir
+C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/CMakeFiles/Properties-Recon_autogen.dir

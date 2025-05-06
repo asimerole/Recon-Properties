@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\mocs_compilation_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\authorization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\EWIEGA46WW_Debug\qrc_resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\EWIEGA46WW_Release\qrc_resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\EWIEGA46WW_MinSizeRel\qrc_resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\EWIEGA46WW_RelWithDebInfo\qrc_resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\development\Projects\Properties-Recon\mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\development\Projects\Properties-Recon\authorization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\include_Debug\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\include_Debug\ui_authorization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\include_Release\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\include_Release\ui_authorization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\include_MinSizeRel\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\include_MinSizeRel\ui_authorization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\include_RelWithDebInfo\ui_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\include_RelWithDebInfo\ui_authorization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\development\Projects\Properties-Recon\build\CMakeFiles\49bc4c093ff669cfd615234608c7c4e1\autouic_(CONFIG).stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\development\Projects\Properties-Recon\build\CMakeFiles\8c10ed9f7529b52dab62ca91961fbd4c\qrc_resources.cpp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\development\Projects\Properties-Recon\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\development\Projects\Properties-Recon\mainwindow.ui" />
+    <None Include="C:\development\Projects\Properties-Recon\authorization.ui" />
+    <None Include="C:\development\Projects\Properties-Recon\resources.qrc" />
+    <None Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\autouic_Debug.stamp" />
+    <None Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\autouic_Release.stamp" />
+    <None Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\autouic_MinSizeRel.stamp" />
+    <None Include="C:\development\Projects\Properties-Recon\build\Properties-Recon_autogen\autouic_RelWithDebInfo.stamp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C:\development\Projects\Properties-Recon\app_icon.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{EF02A1F2-F38E-3AEB-A5F0-DB3725D6DCB3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{298C57DE-6150-32C5-BCF1-B1FDAC95445C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{79E47FDE-945B-34F5-8311-884A099781C6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

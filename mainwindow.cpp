@@ -1557,6 +1557,7 @@ void MainWindow::AddTextWithButton(int row, int column, const QString &text)
     font.setFamily("Tahoma");
     font.setBold(false);
     textLabel->setFont(font);
+    textLabel->setStyleSheet("background-color: transparent;");
 
     QPushButton *toggleButton = new QPushButton("▼");
     toggleButton->setFixedSize(20, 20);
@@ -1571,6 +1572,8 @@ void MainWindow::AddTextWithButton(int row, int column, const QString &text)
     layout->addWidget(toggleButton);
     layout->setAlignment(Qt::AlignLeft);
 
+    ui->serviceTreeTableWidget->setItem(row, column, nullptr);
+
     ui->serviceTreeTableWidget->setCellWidget(row, column, containerWidget);
 }
 
@@ -1579,12 +1582,10 @@ void mergeRepeatedCells(QTableWidget* table) {
 
     const int rowCount = table->rowCount();
 
-    // Структура: {предыдущее значение, индекс строки начала блока}
     QVariant prevEnterprise, prevSubstation, prevIp;
     int startEnterpriseRow = -1, startSubstationRow = -1, startIpRow = -1;
 
     for (int row = 0; row <= rowCount; ++row) {
-        // Чтобы обработать последний блок, проходим на одну итерацию дальше
         QVariant enterprise, substation, ip;
 
         if (row < rowCount) {
@@ -1593,35 +1594,39 @@ void mergeRepeatedCells(QTableWidget* table) {
             ip         = table->item(row, 4) ? table->item(row, 4)->text() : "";
         }
 
-        // === Предприятие (столбец 1) ===
+        // Предприятие (столбец 1)
         if (enterprise != prevEnterprise || row == rowCount) {
-            if (startEnterpriseRow != -1 && row - startEnterpriseRow > 1) {
-                table->setSpan(startEnterpriseRow, 1, row - startEnterpriseRow, 1);
+            int span = row - startEnterpriseRow;
+            if (startEnterpriseRow != -1 && span > 1) {
+                table->setSpan(startEnterpriseRow, 1, span, 1);
             }
             startEnterpriseRow = row;
             prevEnterprise = enterprise;
         }
 
-        // === Подстанция (столбец 2) ===
+        // Подстанция (столбец 2)
         if (substation != prevSubstation || row == rowCount) {
-            if (startSubstationRow != -1 && row - startSubstationRow > 1) {
-                table->setSpan(startSubstationRow, 2, row - startSubstationRow, 1);
+            int span = row - startSubstationRow;
+            if (startSubstationRow != -1 && span > 1) {
+                table->setSpan(startSubstationRow, 2, span, 1);
             }
             startSubstationRow = row;
             prevSubstation = substation;
         }
 
-        // === IP-адрес (столбец 4) ===
+        // IP-адрес (столбец 4 и последний)
         if (ip != prevIp || row == rowCount) {
-            if (startIpRow != -1 && row - startIpRow > 1) {
-                table->setSpan(startIpRow, 4, row - startIpRow, 1);
-                table->setSpan(startIpRow, table->columnCount() - 1, row - startIpRow, 1); // если нужен и последний столбец
+            int span = row - startIpRow;
+            if (startIpRow != -1 && span > 1) {
+                table->setSpan(startIpRow, 4, span, 1);
+                table->setSpan(startIpRow, table->columnCount() - 1, span, 1);
             }
             startIpRow = row;
             prevIp = ip;
         }
     }
 }
+
 
 void clearAllSpans(QTableWidget* table) {
     for (int row = 0; row < table->rowCount(); ++row) {
@@ -1799,9 +1804,9 @@ void MainWindow::LoadServiceTree()
             for (int col = 0; col < rowData.size(); ++col) {
                 QTableWidgetItem *item = new QTableWidgetItem(rowData[col]);
 
-                if(col == 1 || col == 2){
-                    AddTextWithButton(row, col, rowData[col]);
-                }
+                // if(col == 1 || col == 2){
+                //     AddTextWithButton(row, col, rowData[col]);
+                // }
 
                 // Скрываем столбец с ID, local_path и struct_id
                 if (col == 0 || col == 6 || col == 7 || col == 8) {
@@ -1903,27 +1908,39 @@ bool MainWindow::CheckFtpConnection(const QString &ipAddress, const QString &rem
     CURLcode res;
     bool status = false;
 
+    qDebug() << "Попытка подключения к FTP:";
+    qDebug() << "IP адрес: " << ipAddress;
+    qDebug() << "Папка: " << remoteFolder;
+    qDebug() << "Имя пользователя: " << username;
+
     curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
 
     if(curl) {
         QString url = QString("ftp://%1/").arg(ipAddress);
+
         curl_easy_setopt(curl, CURLOPT_URL, url.toStdString().c_str());
         curl_easy_setopt(curl, CURLOPT_USERNAME, username.toStdString().c_str());
         curl_easy_setopt(curl, CURLOPT_PASSWORD, password.toStdString().c_str());
         curl_easy_setopt(curl, CURLOPT_PORT, 21);
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L); // Подробный вывод от libcurl
+        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L); // Таймаут подключения
+        curl_easy_setopt(curl, CURLOPT_FTP_RESPONSE_TIMEOUT, 10L); // Таймаут ожидания ответа FTP
 
-        // Попытка подключения
         res = curl_easy_perform(curl);
 
         if (res == CURLE_OK) {
+            qDebug() << "FTP-соединение успешно установлено.";
             status = true;
         }
         else {
-            qDebug() << "Ошибка подключения к FTP серверу: " << curl_easy_strerror(res);
+            qDebug() << "Ошибка подключения к FTP серверу:" << curl_easy_strerror(res) << "(код" << res << ")";
         }
 
         curl_easy_cleanup(curl);
+    }
+    else {
+        qDebug() << "Не удалось инициализировать libcurl.";
     }
 
     curl_global_cleanup();
@@ -2590,12 +2607,24 @@ void MainWindow::updateIpAssignment(const QStringList &rowData, QLineEdit *ipAdd
     QString ipFromTable = rowData[4];
 
     QList<QVariantMap> records = getIpRecords(ipAddress);
+    qDebug() << "1 ";
     bool ipExists = !records.isEmpty();
+     qDebug() << "2 ";
     bool ipWithUnitExists = hasUnitId(records, unitId_fromTable);
-    bool isMultiple = records.first()["isMultiple"].toBool();
-    int numRealUnits = std::count_if(records.begin(), records.end(), [](const auto &r) {
+      qDebug() << "3 ";
+    bool isMultiple;
+    int numRealUnits;
+
+    if(ipExists){
+
+    isMultiple = records.first()["isMultiple"].toBool();
+       qDebug() << "4 ";
+    numRealUnits = std::count_if(records.begin(), records.end(), [](const auto &r) {
         return !r["unit_id"].isNull();
     });
+
+    }
+    qDebug() << "5 ";
 
     qDebug() << "ipExists " << ipWithUnitExists;
     qDebug() << "isMultiple " << isMultiple;
@@ -2635,111 +2664,6 @@ void MainWindow::updateIpAssignment(const QStringList &rowData, QLineEdit *ipAdd
                                    ipLogin, ipPassword, status, unitFromTable);
         }
     }
-
-    // bool duplicateFound = false;
-    // bool sameUnitDuplicate = false;
-    // bool isNullUnitId = false;
-    // int unitIdFromDB = -1;
-    // bool isMultipleIp;
-
-    // if (checkDuplicateQuery.next()) {
-    //     QVariant existingUnitIdVariant = checkDuplicateQuery.value(0);
-    //     unitIdFromDB = existingUnitIdVariant.isNull() ? -1 : existingUnitIdVariant.toInt();
-    //     isMultipleIp = checkDuplicateQuery.value(1).toBool();
-    // } else {
-    //     unitIdFromDB = -1;
-    //     isMultipleIp = false;
-    // }
-
-    // qDebug() << "unitIdFromDB " << unitIdFromDB;
-    // qDebug() << "isMultipleIp " << isMultipleIp;
-
-    // if (unitIdFromDB == unitId_fromTable && ipAddress == ipFromTable) { // Тут было ipAddress != ipFromTable
-    //     sameUnitDuplicate = true;
-    // }
-
-    // if (sameUnitDuplicate) {
-    //     if(!isMultipleIp){
-    //         QMessageBox::warning(this, "Помилка",
-    //                              "Ви ввели параметри сервера, які вже прив'язані до даного об'єкта. "
-    //                              "Якщо сервер з IP '" + ipFromTable + "' більше не актуальний, будь ласка, видаліть його кнопкою видалення.");
-    //         return;
-    //     }
-    // }
-
-    // if (unitIdFromDB != -1 && unitIdFromDB != unitId_fromTable) {
-    //     duplicateFound = true;
-    //     QMessageBox::warning(this, "Помилка",
-    //                          "Сервер з IP '" + ipAddress + "' вже прив'язаний до іншого об'єкту. "
-    //                                                        "Один сервер не може бути прив'язаний до різних об'єктів.");
-    //     return;
-    // }
-
-    // if (unitIdFromDB == -1) {
-    //     isNullUnitId = true;
-    // }
-    // qDebug() << "sameUnitDuplicate: " << sameUnitDuplicate;
-    // qDebug() << "duplicateFound: " << duplicateFound;
-    // qDebug() << "isNullUnitId: " << isNullUnitId;
-
-    // if (!duplicateFound && isMultipleIp) {
-    //     // Проверка наличия записи с текущим IP и обновление данных
-    //     if (ipFromTable == ipAddress) {
-    //         UpdateIpParams(unitId_fromTable, ipAddress, ipFromTable, ipLogin, ipPassword, struct_id, remotePath, localPath, previousUnit, isMultipleIp);
-    //     } else {
-    //         // Проверка подключения по введённым данным
-    //         if (CheckFtpConnection(ipAddress, remotePath, ipLogin, ipPassword)) {
-    //             status = 1;
-    //         } else {
-    //             status = 2;
-    //         }
-
-    //         QSqlQuery query;
-
-    //         if (isNullUnitId) {
-    //             // Если запись с unit_id == NULL уже существует, обновляем её
-    //             query.prepare("UPDATE [ReconDB].[dbo].[FTP_servers] "
-    //                           "SET unit_id = :unitId, login = :ipLogin, password = :ipPassword, status = :status, previous_unit = :previousUnit, isMultiple = :isMultipleIp "
-    //                           "WHERE IP_addr = :ipAddress");
-    //         } else {
-    //             // Вставка новой записи, если не найдено существующей с NULL
-    //             query.prepare("INSERT INTO [ReconDB].[dbo].[FTP_servers](unit_id, IP_addr, login, password, status, previous_unit, isMultiple) "
-    //                           "VALUES(:unitId, :ipAddress, :ipLogin, :ipPassword, :status, :previousUnit, :isMultipleIp)");
-    //         }
-
-    //         query.bindValue(":unitId", unitId_fromTable);
-    //         query.bindValue(":ipAddress", ipAddress);
-    //         query.bindValue(":ipLogin", ipLogin);
-    //         query.bindValue(":ipPassword", ipPassword);
-    //         query.bindValue(":status", status);
-    //         query.bindValue(":previousUnit", previousUnit);
-    //         query.bindValue(":isMultipleIp", isMultipleIp);
-
-    //         if (!query.exec()) {
-    //             QMessageBox::critical(this, "Помилка", "Помилка додавання або оновлення IP-адреси: " + query.lastError().text());
-    //         } else {
-    //             QString substation = rowData[2];
-    //             if (status == 1) {
-    //                 QMessageBox::warning(this, "Підключення до сервера", "З'єднання з сервером підстанції '" + substation + "' з ІР '" + ipAddress + "' успішно встановлено");
-    //             } else {
-    //                 QMessageBox::warning(this, "Підключення до сервера", "З'єднання з сервером підстанції '" + substation + "' з ІР '" + ipAddress + "' не було встановлено");
-    //             }
-    //         }
-
-            // // Вставка в таблицу FTP_Directories
-            // QSqlQuery insertDirectoryQuery;
-            // insertDirectoryQuery.prepare("UPDATE [ReconDB].[dbo].[FTP_Directories] SET [remote_path] = :remotePath, "
-            //                              "[local_path] = :localPath "
-            //                              "WHERE [struct_id] = :struct_id");
-            // insertDirectoryQuery.bindValue(":remotePath", remotePath);
-            // insertDirectoryQuery.bindValue(":localPath", localPath);
-            // insertDirectoryQuery.bindValue(":struct_id", struct_id);
-
-            // if (!insertDirectoryQuery.exec())
-            // {
-            //     QMessageBox::critical(this, "Помилка", "Помилка додавання шляху: " + insertDirectoryQuery.lastError().text());
-            // }
-        //}
 }
 
 void MainWindow::DeleteAddress(QString unit_id, QLineEdit *ipAddressEdit)

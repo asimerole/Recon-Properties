@@ -54,6 +54,8 @@ static constexpr auto qt_meta_stringdata_ZN10MainWindowE = QtMocHelpers::stringD
     "userRow",
     "DeleteUser",
     "SelectObjects",
+    "onHeaderClicked",
+    "logicalIndex",
     "LoadUsers",
     "LoadServiceTree",
     "HandleChangePassword",
@@ -174,7 +176,7 @@ Q_CONSTINIT static const uint qt_meta_data_ZN10MainWindowE[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-      43,   14, // methods
+      44,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -182,49 +184,50 @@ Q_CONSTINIT static const uint qt_meta_data_ZN10MainWindowE[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,  272,    2, 0x08,    1 /* Private */,
-       3,    4,  273,    2, 0x08,    2 /* Private */,
-       9,    0,  282,    2, 0x08,    7 /* Private */,
-      10,    0,  283,    2, 0x08,    8 /* Private */,
-      11,    1,  284,    2, 0x08,    9 /* Private */,
-      13,    0,  287,    2, 0x08,   11 /* Private */,
-      14,    0,  288,    2, 0x08,   12 /* Private */,
-      15,    0,  289,    2, 0x08,   13 /* Private */,
-      16,    0,  290,    2, 0x08,   14 /* Private */,
-      17,    1,  291,    2, 0x08,   15 /* Private */,
-      19,    0,  294,    2, 0x08,   17 /* Private */,
-      20,    0,  295,    2, 0x08,   18 /* Private */,
-      21,    7,  296,    2, 0x08,   19 /* Private */,
-      35,    3,  311,    2, 0x08,   27 /* Private */,
-      39,    3,  318,    2, 0x08,   31 /* Private */,
-      43,    1,  325,    2, 0x08,   35 /* Private */,
-      45,    1,  328,    2, 0x08,   37 /* Private */,
-      46,    1,  331,    2, 0x08,   39 /* Private */,
-      47,    2,  334,    2, 0x08,   41 /* Private */,
-      49,    1,  339,    2, 0x08,   44 /* Private */,
-      51,    1,  342,    2, 0x08,   46 /* Private */,
-      54,    1,  345,    2, 0x08,   48 /* Private */,
-      56,    2,  348,    2, 0x08,   50 /* Private */,
-      60,    3,  353,    2, 0x08,   53 /* Private */,
-      65,    2,  360,    2, 0x08,   57 /* Private */,
-      66,    2,  365,    2, 0x08,   60 /* Private */,
-      67,    2,  370,    2, 0x08,   63 /* Private */,
-      68,    1,  375,    2, 0x08,   66 /* Private */,
-      69,    4,  378,    2, 0x08,   68 /* Private */,
-      74,    4,  387,    2, 0x08,   73 /* Private */,
-      75,    2,  396,    2, 0x08,   78 /* Private */,
-      76,    2,  401,    2, 0x08,   81 /* Private */,
-      79,   10,  406,    2, 0x08,   84 /* Private */,
-      89,    4,  427,    2, 0x08,   95 /* Private */,
-      95,    1,  436,    2, 0x08,  100 /* Private */,
-      98,   10,  439,    2, 0x08,  102 /* Private */,
-     107,    6,  460,    2, 0x08,  113 /* Private */,
-     113,    6,  473,    2, 0x08,  120 /* Private */,
-     115,    2,  486,    2, 0x08,  127 /* Private */,
-     117,    2,  491,    2, 0x08,  130 /* Private */,
-     118,    3,  496,    2, 0x08,  133 /* Private */,
-     121,    0,  503,    2, 0x08,  137 /* Private */,
-     122,    1,  504,    2, 0x08,  138 /* Private */,
+       1,    0,  278,    2, 0x08,    1 /* Private */,
+       3,    4,  279,    2, 0x08,    2 /* Private */,
+       9,    0,  288,    2, 0x08,    7 /* Private */,
+      10,    0,  289,    2, 0x08,    8 /* Private */,
+      11,    1,  290,    2, 0x08,    9 /* Private */,
+      13,    0,  293,    2, 0x08,   11 /* Private */,
+      14,    0,  294,    2, 0x08,   12 /* Private */,
+      15,    1,  295,    2, 0x08,   13 /* Private */,
+      17,    0,  298,    2, 0x08,   15 /* Private */,
+      18,    0,  299,    2, 0x08,   16 /* Private */,
+      19,    1,  300,    2, 0x08,   17 /* Private */,
+      21,    0,  303,    2, 0x08,   19 /* Private */,
+      22,    0,  304,    2, 0x08,   20 /* Private */,
+      23,    7,  305,    2, 0x08,   21 /* Private */,
+      37,    3,  320,    2, 0x08,   29 /* Private */,
+      41,    3,  327,    2, 0x08,   33 /* Private */,
+      45,    1,  334,    2, 0x08,   37 /* Private */,
+      47,    1,  337,    2, 0x08,   39 /* Private */,
+      48,    1,  340,    2, 0x08,   41 /* Private */,
+      49,    2,  343,    2, 0x08,   43 /* Private */,
+      51,    1,  348,    2, 0x08,   46 /* Private */,
+      53,    1,  351,    2, 0x08,   48 /* Private */,
+      56,    1,  354,    2, 0x08,   50 /* Private */,
+      58,    2,  357,    2, 0x08,   52 /* Private */,
+      62,    3,  362,    2, 0x08,   55 /* Private */,
+      67,    2,  369,    2, 0x08,   59 /* Private */,
+      68,    2,  374,    2, 0x08,   62 /* Private */,
+      69,    2,  379,    2, 0x08,   65 /* Private */,
+      70,    1,  384,    2, 0x08,   68 /* Private */,
+      71,    4,  387,    2, 0x08,   70 /* Private */,
+      76,    4,  396,    2, 0x08,   75 /* Private */,
+      77,    2,  405,    2, 0x08,   80 /* Private */,
+      78,    2,  410,    2, 0x08,   83 /* Private */,
+      81,   10,  415,    2, 0x08,   86 /* Private */,
+      91,    4,  436,    2, 0x08,   97 /* Private */,
+      97,    1,  445,    2, 0x08,  102 /* Private */,
+     100,   10,  448,    2, 0x08,  104 /* Private */,
+     109,    6,  469,    2, 0x08,  115 /* Private */,
+     115,    6,  482,    2, 0x08,  122 /* Private */,
+     117,    2,  495,    2, 0x08,  129 /* Private */,
+     119,    2,  500,    2, 0x08,  132 /* Private */,
+     120,    3,  505,    2, 0x08,  135 /* Private */,
+     123,    0,  512,    2, 0x08,  139 /* Private */,
+     124,    1,  513,    2, 0x08,  140 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -234,42 +237,43 @@ Q_CONSTINIT static const uint qt_meta_data_ZN10MainWindowE[] = {
     QMetaType::Void, QMetaType::Int,   12,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   16,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   18,
+    QMetaType::Void, QMetaType::Int,   20,
     QMetaType::Void,
     QMetaType::Void,
-    0x80000000 | 22, 0x80000000 | 23, 0x80000000 | 23, 0x80000000 | 26, 0x80000000 | 28, 0x80000000 | 30, 0x80000000 | 30, 0x80000000 | 33,   24,   25,   27,   29,   31,   32,   34,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Bool,   36,   37,   38,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::QString,   40,   41,   42,
-    QMetaType::Bool, QMetaType::QString,   44,
-    QMetaType::Void, QMetaType::Int,   18,
-    QMetaType::Void, QMetaType::Int,   18,
-    QMetaType::Void, QMetaType::Int, QMetaType::Bool,   18,   48,
-    QMetaType::Void, QMetaType::QString,   50,
-    QMetaType::Void, 0x80000000 | 52,   53,
-    QMetaType::Void, QMetaType::QStringList,   55,
-    0x80000000 | 22, QMetaType::QString, 0x80000000 | 58,   57,   59,
-    QMetaType::Void, 0x80000000 | 61, QMetaType::QString, 0x80000000 | 63,   62,   59,   64,
-    QMetaType::Void, 0x80000000 | 61, QMetaType::QString,   62,   59,
-    QMetaType::Void, 0x80000000 | 61, QMetaType::QString,   62,   59,
-    QMetaType::Void, 0x80000000 | 61, 0x80000000 | 58,   62,   59,
-    QMetaType::Bool, QMetaType::QString,   57,
-    QMetaType::Bool, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QString,   70,   71,   72,   73,
-    QMetaType::Bool, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QString,   70,   71,   72,   73,
-    QMetaType::Void, QMetaType::QString, QMetaType::Bool,   70,   48,
-    QMetaType::Void, QMetaType::QString, QMetaType::Bool,   77,   78,
-    QMetaType::Void, 0x80000000 | 80, 0x80000000 | 58, 0x80000000 | 58, 0x80000000 | 58, 0x80000000 | 58, 0x80000000 | 58, 0x80000000 | 58, 0x80000000 | 58, 0x80000000 | 58, QMetaType::Bool,   81,   70,   82,   83,   84,   85,   77,   86,   87,   88,
-    QMetaType::Bool, 0x80000000 | 90, 0x80000000 | 90, 0x80000000 | 90, 0x80000000 | 90,   91,   92,   93,   94,
-    0x80000000 | 96, QMetaType::QString,   97,
-    QMetaType::Bool, QMetaType::Bool, QMetaType::Bool, QMetaType::Int, QMetaType::QString, 0x80000000 | 102, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::Int, 0x80000000 | 102,   88,   99,  100,  101,  103,  104,  105,   73,  106,   87,
-    QMetaType::Void, QMetaType::QString, QMetaType::Bool, 0x80000000 | 109, 0x80000000 | 90, 0x80000000 | 90, 0x80000000 | 111,   97,  108,  110,   92,   93,  112,
-    QMetaType::Void, QMetaType::QStringList, 0x80000000 | 90, 0x80000000 | 90, 0x80000000 | 90, 0x80000000 | 90, 0x80000000 | 111,   55,   91,   92,   93,   94,  114,
-    QMetaType::Void, QMetaType::QString, QMetaType::Int,   97,  116,
-    QMetaType::Void, QMetaType::QString, 0x80000000 | 90,   81,   91,
-    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString,   85,  119,  120,
+    0x80000000 | 24, 0x80000000 | 25, 0x80000000 | 25, 0x80000000 | 28, 0x80000000 | 30, 0x80000000 | 32, 0x80000000 | 32, 0x80000000 | 35,   26,   27,   29,   31,   33,   34,   36,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Bool,   38,   39,   40,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::QString,   42,   43,   44,
+    QMetaType::Bool, QMetaType::QString,   46,
+    QMetaType::Void, QMetaType::Int,   20,
+    QMetaType::Void, QMetaType::Int,   20,
+    QMetaType::Void, QMetaType::Int, QMetaType::Bool,   20,   50,
+    QMetaType::Void, QMetaType::QString,   52,
+    QMetaType::Void, 0x80000000 | 54,   55,
+    QMetaType::Void, QMetaType::QStringList,   57,
+    0x80000000 | 24, QMetaType::QString, 0x80000000 | 60,   59,   61,
+    QMetaType::Void, 0x80000000 | 63, QMetaType::QString, 0x80000000 | 65,   64,   61,   66,
+    QMetaType::Void, 0x80000000 | 63, QMetaType::QString,   64,   61,
+    QMetaType::Void, 0x80000000 | 63, QMetaType::QString,   64,   61,
+    QMetaType::Void, 0x80000000 | 63, 0x80000000 | 60,   64,   61,
+    QMetaType::Bool, QMetaType::QString,   59,
+    QMetaType::Bool, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QString,   72,   73,   74,   75,
+    QMetaType::Bool, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QString,   72,   73,   74,   75,
+    QMetaType::Void, QMetaType::QString, QMetaType::Bool,   72,   50,
+    QMetaType::Void, QMetaType::QString, QMetaType::Bool,   79,   80,
+    QMetaType::Void, 0x80000000 | 82, 0x80000000 | 60, 0x80000000 | 60, 0x80000000 | 60, 0x80000000 | 60, 0x80000000 | 60, 0x80000000 | 60, 0x80000000 | 60, 0x80000000 | 60, QMetaType::Bool,   83,   72,   84,   85,   86,   87,   79,   88,   89,   90,
+    QMetaType::Bool, 0x80000000 | 92, 0x80000000 | 92, 0x80000000 | 92, 0x80000000 | 92,   93,   94,   95,   96,
+    0x80000000 | 98, QMetaType::QString,   99,
+    QMetaType::Bool, QMetaType::Bool, QMetaType::Bool, QMetaType::Int, QMetaType::QString, 0x80000000 | 104, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::Int, 0x80000000 | 104,   90,  101,  102,  103,  105,  106,  107,   75,  108,   89,
+    QMetaType::Void, QMetaType::QString, QMetaType::Bool, 0x80000000 | 111, 0x80000000 | 92, 0x80000000 | 92, 0x80000000 | 113,   99,  110,  112,   94,   95,  114,
+    QMetaType::Void, QMetaType::QStringList, 0x80000000 | 92, 0x80000000 | 92, 0x80000000 | 92, 0x80000000 | 92, 0x80000000 | 113,   57,   93,   94,   95,   96,  116,
+    QMetaType::Void, QMetaType::QString, QMetaType::Int,   99,  118,
+    QMetaType::Void, QMetaType::QString, 0x80000000 | 92,   83,   93,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString,   87,  121,  122,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,  123,
+    QMetaType::Void, QMetaType::Bool,  125,
 
        0        // eod
 };
@@ -302,6 +306,9 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'SelectObjects'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'onHeaderClicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
         // method 'LoadUsers'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'LoadServiceTree'
@@ -482,69 +489,63 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 4: _t->updateSelectedObjects((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 5: _t->DeleteUser(); break;
         case 6: _t->SelectObjects(); break;
-        case 7: _t->LoadUsers(); break;
-        case 8: _t->LoadServiceTree(); break;
-        case 9: _t->HandleChangePassword((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 10: _t->LoadSettings(); break;
-        case 11: _t->OpenEditSettingsDialog(); break;
-        case 12: { QDialog* _r = _t->CreateUserDialog((*reinterpret_cast< std::add_pointer_t<QLineEdit*&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*&>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QComboBox*&>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QCheckBox*&>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QPushButton*&>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QPushButton*&>>(_a[6])),(*reinterpret_cast< std::add_pointer_t<QLabel*&>>(_a[7])));
+        case 7: _t->onHeaderClicked((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 8: _t->LoadUsers(); break;
+        case 9: _t->LoadServiceTree(); break;
+        case 10: _t->HandleChangePassword((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 11: _t->LoadSettings(); break;
+        case 12: _t->OpenEditSettingsDialog(); break;
+        case 13: { QDialog* _r = _t->CreateUserDialog((*reinterpret_cast< std::add_pointer_t<QLineEdit*&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*&>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QComboBox*&>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QCheckBox*&>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QPushButton*&>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QPushButton*&>>(_a[6])),(*reinterpret_cast< std::add_pointer_t<QLabel*&>>(_a[7])));
             if (_a[0]) *reinterpret_cast< QDialog**>(_a[0]) = std::move(_r); }  break;
-        case 13: _t->toggleRowVisibility((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[3]))); break;
-        case 14: _t->AddTextWithButton((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
-        case 15: { bool _r = _t->CheckObjectsSelection((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+        case 14: _t->toggleRowVisibility((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[3]))); break;
+        case 15: _t->AddTextWithButton((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
+        case 16: { bool _r = _t->CheckObjectsSelection((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 16: _t->FillAdminObjects((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 17: _t->FillUserObjects((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 18: _t->UpdateUserStatus((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
-        case 19: _t->FilterUsers((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 20: _t->OnFactorySelected((*reinterpret_cast< std::add_pointer_t<QTableWidgetItem*>>(_a[1]))); break;
-        case 21: _t->OpenFactoryDialog((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1]))); break;
-        case 22: { QDialog* _r = _t->createDialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[2])));
+        case 17: _t->FillAdminObjects((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 18: _t->FillUserObjects((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 19: _t->UpdateUserStatus((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
+        case 20: _t->FilterUsers((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 21: _t->OnFactorySelected((*reinterpret_cast< std::add_pointer_t<QTableWidgetItem*>>(_a[1]))); break;
+        case 22: _t->OpenFactoryDialog((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1]))); break;
+        case 23: { QDialog* _r = _t->createDialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[2])));
             if (_a[0]) *reinterpret_cast< QDialog**>(_a[0]) = std::move(_r); }  break;
-        case 23: _t->setupMailSettings((*reinterpret_cast< std::add_pointer_t<QVBoxLayout*>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QPushButton*>>(_a[3]))); break;
-        case 24: _t->setupOnedriveSettings((*reinterpret_cast< std::add_pointer_t<QVBoxLayout*>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 25: _t->setupRootDirectorySettings((*reinterpret_cast< std::add_pointer_t<QVBoxLayout*>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 26: _t->setupDefaultSettings((*reinterpret_cast< std::add_pointer_t<QVBoxLayout*>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[2]))); break;
-        case 27: { bool _r = _t->saveSettings((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+        case 24: _t->setupMailSettings((*reinterpret_cast< std::add_pointer_t<QVBoxLayout*>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QPushButton*>>(_a[3]))); break;
+        case 25: _t->setupOnedriveSettings((*reinterpret_cast< std::add_pointer_t<QVBoxLayout*>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 26: _t->setupRootDirectorySettings((*reinterpret_cast< std::add_pointer_t<QVBoxLayout*>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 27: _t->setupDefaultSettings((*reinterpret_cast< std::add_pointer_t<QVBoxLayout*>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[2]))); break;
+        case 28: { bool _r = _t->saveSettings((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 28: { bool _r = _t->CheckFtpConnection((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[4])));
+        case 29: { bool _r = _t->CheckFtpConnection((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[4])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 29: { bool _r = _t->CheckFtpFolderExists((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[4])));
+        case 30: { bool _r = _t->CheckFtpFolderExists((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[4])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 30: _t->UpdateFactoryStatus((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
-        case 31: _t->UpdateFourDigitsStatus((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
-        case 32: _t->UpdateIpParams((*reinterpret_cast< std::add_pointer_t<int&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[6])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[7])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[8])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[9])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[10]))); break;
-        case 33: { bool _r = _t->CheckEmptyFieldsFactoryDialog((*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[4])));
+        case 31: _t->UpdateFactoryStatus((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
+        case 32: _t->UpdateFourDigitsStatus((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
+        case 33: _t->UpdateIpParams((*reinterpret_cast< std::add_pointer_t<int&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[6])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[7])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[8])),(*reinterpret_cast< std::add_pointer_t<QString&>>(_a[9])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[10]))); break;
+        case 34: { bool _r = _t->CheckEmptyFieldsFactoryDialog((*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[4])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 34: { QList<QVariantMap> _r = _t->getIpRecords((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+        case 35: { QList<QVariantMap> _r = _t->getIpRecords((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast< QList<QVariantMap>*>(_a[0]) = std::move(_r); }  break;
-        case 35: { bool _r = _t->handleMultipleIpUpdate((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QVariant>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[6])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[7])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[8])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[9])),(*reinterpret_cast< std::add_pointer_t<QVariant>>(_a[10])));
+        case 36: { bool _r = _t->handleMultipleIpUpdate((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QVariant>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[6])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[7])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[8])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[9])),(*reinterpret_cast< std::add_pointer_t<QVariant>>(_a[10])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 36: _t->loadIpCredentials((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QLabel*>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QCheckBox*>>(_a[6]))); break;
-        case 37: _t->updateIpAssignment((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QCheckBox*>>(_a[6]))); break;
-        case 38: _t->unmarkAsMultipleAndCleanOthers((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2]))); break;
-        case 39: _t->DeleteAddress((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[2]))); break;
-        case 40: _t->InsertDirValue((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
-        case 41: _t->FillMissingData(); break;
-        case 42: _t->updateGroupSetting((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 37: _t->loadIpCredentials((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QLabel*>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QCheckBox*>>(_a[6]))); break;
+        case 38: _t->updateIpAssignment((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<QCheckBox*>>(_a[6]))); break;
+        case 39: _t->unmarkAsMultipleAndCleanOthers((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2]))); break;
+        case 40: _t->DeleteAddress((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QLineEdit*>>(_a[2]))); break;
+        case 41: _t->InsertDirValue((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
+        case 42: _t->FillMissingData(); break;
+        case 43: _t->updateGroupSetting((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
         default: ;
         }
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
-        case 23:
+        case 24:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 2:
                 *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< QPushButton* >(); break;
-            case 0:
-                *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< QVBoxLayout* >(); break;
-            }
-            break;
-        case 24:
-            switch (*reinterpret_cast<int*>(_a[1])) {
-            default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 0:
                 *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< QVBoxLayout* >(); break;
             }
@@ -563,7 +564,14 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
                 *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< QVBoxLayout* >(); break;
             }
             break;
-        case 33:
+        case 27:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
+            case 0:
+                *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< QVBoxLayout* >(); break;
+            }
+            break;
+        case 34:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 3:
@@ -573,7 +581,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
                 *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< QLineEdit* >(); break;
             }
             break;
-        case 36:
+        case 37:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 5:
@@ -585,7 +593,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
                 *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< QLineEdit* >(); break;
             }
             break;
-        case 37:
+        case 38:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 5:
@@ -597,7 +605,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
                 *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< QLineEdit* >(); break;
             }
             break;
-        case 39:
+        case 40:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 1:
@@ -627,14 +635,14 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 43)
+        if (_id < 44)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 43;
+        _id -= 44;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 43)
+        if (_id < 44)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 43;
+        _id -= 44;
     }
     return _id;
 }

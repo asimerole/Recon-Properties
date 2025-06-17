@@ -3,10 +3,6 @@
 
 #include <QMainWindow>
 #include <QCryptographicHash>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QSqlRecord>
 #include <QStandardPaths>
 #include <QMessageBox>
 #include <QCheckBox>
@@ -43,6 +39,8 @@
 #include <openssl/evp.h>
 #include <openssl/rand.h>
 
+#include "databasemanager.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -56,172 +54,170 @@ public:
     ~MainWindow();
 
 private slots:
-    // Создание конфиг файла
+    // Creating a config file
     void CreateConfigFile();
 
-    // Шифорвание конфиг файла
+    // Encrypting config file
     bool encryptDataToFile(const QByteArray& data, const QString& filePath, const unsigned char* key, const unsigned char* iv);
 
-    // Добавления пользователя в Базу
+    // Adding a user to the Database
     void AddUserToDB();
 
-    // Оьновление параметров пользователя
+    // Updating user parameters
     void UpdateUser();
 
-    // Обновление присвоенных объектов юзеру
+    // Updating objects assigned to a user
     void updateSelectedObjects(int userRow);
 
-    // Удаление юзера
+    // Deleting a user
     void DeleteUser();
 
-    // Выбор объектов
+    // Selecting objects
     void SelectObjects();
 
-    // Загрузка таблицы пользователей (Вкладка 2)
+    // Sorting connector
+    void onHeaderClicked(int logicalIndex);
+
+    // Loading the Users Table (Tab 2)
     void LoadUsers();
 
-    // Загрузка таблицы фтп серверов (Вкладка 3)
+    // Loading FTP Servers Table (Tab 3)
     void LoadServiceTree();
 
-    // Изменение пароля для пользователя
+    // Change password for user
     void HandleChangePassword(int userID);
 
-    // Загрузка таблицы с настрйоками (Вкладка 1)
+    // Loading the settings table (Tab 1)
     void LoadSettings();
 
-    // Обновления данных о параметрах в БД
+    // Updates to parameter data in the database
     void OpenEditSettingsDialog();
 
-    // Создание диалогового окна для пользователя
+    // Creating a dialog box for the user
     QDialog* CreateUserDialog(QLineEdit*& userLoginEdit, QLineEdit*& userWorkPosition, QComboBox*& userTypeComboBox,
                               QCheckBox*& userMailingDataCheck, QPushButton*& objectsButton,
                               QPushButton*& actionButton, QLabel*& errorLabel);
 
 
-    // Сворачивание объектов в 1 строку
+    // Collapsing objects into 1 line
     void toggleRowVisibility(int parentRow, int parentColumn, bool collapse);
 
-    // Добавление текста с кнопкой в ячейку
+    // Adding text with a button to a cell
     void AddTextWithButton(int row, int column, const QString &text);
 
-    //
     bool CheckObjectsSelection(const QString& userType);
 
-    // Заполнение объектов админу
+    // Filling objects for admin
     void FillAdminObjects(int userID);
 
-    // Заполнение объектов пользователю
+    // Filling objects for the user
     void FillUserObjects(int userID);
 
-    // Обновление статуса активности пользователя
+    // Updating user activity status
     void UpdateUserStatus(int userID, bool isActive);
 
-    // Филтрование юзеров по имени (через виджет ввода LineEdit)
+    // Filtering users by name (via QLineEdit input widget)
     void FilterUsers(const QString &searchText);
 
-    // Слот для выбора строки в таблице серверов ФТП
+    // Slot for selecting a row in the FTP server table
     void OnFactorySelected(QTableWidgetItem *item);
 
-    // Открытие диалогового окна при выборе ячейки из таблицы серверов ФТП
+    // Opening a dialog box when selecting a cell from the FTP servers table
     void OpenFactoryDialog(const QStringList &rowData);
 
-    // Создание диалогового окна для таблицы настройки параметров
+    // Creating a dialog box for the settings table
     QDialog* createDialog(const QString &name, QString &value);
 
-    // Установка параметров для Почтового модуля
+    // Setting parameters for the Mail module
     void setupMailSettings(QVBoxLayout *layout, const QString &value, QPushButton *saveButton);
 
-    // Установка параметров для модуля Вандрайв
+    // Setting parameters for the OneDrive module
     void setupOnedriveSettings(QVBoxLayout *layout, const QString &value);
 
-    // Установка параметров
+    // Setting parameters
     void setupRootDirectorySettings(QVBoxLayout *layout, const QString &value);
 
-    // Установка параметров по умолчанию (для всего остального)
+    // Set default settings (for everything else)
     void setupDefaultSettings(QVBoxLayout *layout, QString &value);
 
-    // Сохранение параметров в базу (слот для кнопки сохранения)
+    // Saving parameters to the database (slot for the save button)
     bool saveSettings(const QString &name);
 
-    // Проверка подключения к серверу по фтп
+    // Checking the connection to the server via FTP
     bool CheckFtpConnection(const QString &ipAddress, const QString &remoteFolder, const QString &username,
                             const QString &password);
 
-    // Проверка сузествования каталога на удалённом сервере
+    // Checking if a directory exists on a remote server
     bool CheckFtpFolderExists(const QString &ipAddress, const QString &remoteFolder, const QString &username,
                               const QString &password);
 
-    // Обновление статуса активности сервера
+    // Updating server activity status
     void UpdateFactoryStatus(const QString& ipAddress, bool isActive);
 
-    // Обновление статуса для четырёхзначных папок(регистраторов)
+    // Status update for four-digit folders (registrars)
     void UpdateFourDigitsStatus(const QString& remotePath, bool isTrue);
 
-    // Обновление параметров айпи
+    // Updating IP parameters
     void UpdateIpParams(int &unit_id, QString &ipAddress, QString &prevIP, QString &ipLogin, QString &ipPassword, QString &struct_id,
                         QString &remotePath, QString &localPath, QString &previousUnit, bool isMultiple);
 
-    // Проверка полей в окне настройки айпи сервера
+    // Checking fields in the IP server settings window
     bool CheckEmptyFieldsFactoryDialog(QLineEdit *ipAddressEdit, QLineEdit *ipLoginEdit,
                                        QLineEdit *ipPasswordEdit, QLineEdit *remotePathEdit);
 
     // Возврат записей из базы о айпи
     QList<QVariantMap> getIpRecords(const QString &ip);
 
-    // Работа с базой для мульти айпи
+    // Working with a database for multi-ip
     bool handleMultipleIpUpdate(bool isMultiple, bool currentMultiple, int numUnits, const QString& ipFromTable,
                                 const QVariant& unitId, const QString& ipAddr, const QString& login,
                                 const QString& password, int status, const QVariant& previousUnit);
 
     void loadIpCredentials(const QString &ip, bool updateSubstationLabel, QLabel *substationLabel, QLineEdit *ipLoginEdit, QLineEdit *ipPasswordEdit, QCheckBox *ipMultipleCheckBox);
 
-    // Сохранение айпи сервера (привязка айпи к объекту)
+    // Saving the server IP (binding the IP to the object)
     void updateIpAssignment(const QStringList &rowData, QLineEdit *ipAddressEdit,
                     QLineEdit *ipLoginEdit, QLineEdit *ipPasswordEdit, QLineEdit *remotePathEdit, QCheckBox *isMultipleIpCheckBox);
 
-    // Видалення статусу мулти-айпи
+    // View multi-IP status
     void unmarkAsMultipleAndCleanOthers(const QString &ip, int currentUnitId);
 
-    // Удаление адресса (отвзяка айпи от объекта)
+    // Removing an address (unlinking an IP from an object)
     void DeleteAddress(QString unit_id, QLineEdit *ipAddressEdit);
 
-    // Вставка каталога на удалённом сервере (запускается в основном для всех строк в таблице списка серверов ФТП)
+    // Insert directory on remote server (runs mostly for all rows in FTP server list table)
     void InsertDirValue(QString struct_id, QString remote_path, QString local_path);
 
-    // Заполение пустых полей (чаще всего для удалённых каталогов)
+    // Filling in empty fields (most often for remote directories)
     void FillMissingData();
 
-    // Включение и выключение групп
+    // Turning groups on and off
     void updateGroupSetting(bool checked);
 
 
 
 private:
-    // Подключение к базе
-    bool ConnectToDatabase(const QString &dbAddress, const QString &databaseName, const QString &username, const QString &password, const QString &instanceOrPort);
-
-    // Отключение от базы
-    void DisconnectFromDatabase();
-
     Ui::MainWindow *ui;
-    QSqlDatabase DBConnection;
     QStringList selectedObjects;
+
+    // Managers
+    DatabaseManager dbManager;
 
     QDialog *currentFactoryDialog = nullptr;
 
-    QLineEdit *smtpEdit;                                // Поле для ввода SMTP сервера
-    QLineEdit *emailSenderEdit;                         // Поле для ввода почты отправителя
-    QLineEdit *nameSenderEdit;                          // Поле для ввода имени отправителя
-    QTextEdit *msgTemplate;                             // Поле для ввода шаблона сообщения
-    QCheckBox *sslCheck;                                // Галочка для включения SSL
-    QCheckBox *authCheck;                               // Галочка для включения Аунтефикации
-    QLineEdit *authLoginEdit;                           // Поле для ввода Логина в случае Аунтефикации
-    QLineEdit *authPasswordEdit;                        // Поле для ввода Пароля в случае Аунтефикации
-    QLineEdit *pathEdit;                                // Поле для ввода путя к папке OneDrive
-    QLineEdit *monthsEdit;                              // Поле для ввода кол-ва месяцев хранения
-    QLineEdit *rootPathEdit;                            // Поле для ввода корневой папки
-    QLineEdit *timeValueEdit;                           // Поле для ввода времени цикла интеграции
-    QLineEdit *portEdit;                                    // Поле для ввода порта сервера
+    QLineEdit *smtpEdit;                                // SMTP server input field
+    QLineEdit *emailSenderEdit;                         // Field for entering the sender's email
+    QLineEdit *nameSenderEdit;                          // Field for entering the sender's name
+    QTextEdit *msgTemplate;                             // Field for entering a message template
+    QCheckBox *sslCheck;                                // Checkbox to enable SSL
+    QCheckBox *authCheck;                               // Checkbox to enable Authentication
+    QLineEdit *authLoginEdit;                           // Login input field in case of Authentication
+    QLineEdit *authPasswordEdit;                        // Password input field in case of Authentication
+    QLineEdit *pathEdit;                                // Field for entering the path to the OneDrive folder
+    QLineEdit *monthsEdit;                              // Field for entering the number of months of storage
+    QLineEdit *rootPathEdit;                            // Root folder input field
+    QLineEdit *timeValueEdit;                           // Field for entering the integration cycle time
+    QLineEdit *portEdit;                                // Server port input field
 
 };
 

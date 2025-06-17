@@ -8,21 +8,21 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setWindowIcon(QIcon(":/images/icon.ico"));
 
-    // Создание окна авторизации
+    // Creating a login window
     Authorization auth;
 
-    // Показать окно авторизации и ждать результата
+    // Show the authorization window and wait for the result
     if (auth.exec() == QDialog::Accepted) {
-        // После успешной авторизации получаем данные и передаем их в MainWindow
+        // After successful authorization, we receive data and pass it to MainWindow
         QString username = auth.getUsername();
         QString password = auth.getPassword();
         QString dbAddress = auth.getDBAddress();
         QString dbName = auth.getDBName();
 
         MainWindow w(dbAddress, dbName, username, password);
-        w.show(); // Показываем главное окно только после успешной авторизации
+        w.show(); // We show the main window only after successful authorization
         return a.exec();
     }
 
-    return 0; // Программа завершится, если авторизация не удалась
+    return 0; // The program will terminate if authorization fails.
 }

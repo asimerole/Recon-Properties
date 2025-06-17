@@ -49,7 +49,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         app_icon.rc
         resources.qrc
-
+        databasemanager.h databasemanager.cpp
+        databasemanager.h
     )
 else()
     if(ANDROID)

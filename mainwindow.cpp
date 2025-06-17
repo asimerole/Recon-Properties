@@ -23,10 +23,10 @@ MainWindow::MainWindow(const QString &dbAddress, const QString &dbName, const QS
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->statusbar->showMessage("ver. 1.2");
+    //ui->statusbar->showMessage("ver. 1.2");
 
     // Connect to the database with the received parameters
-    if (ConnectToDatabase(dbAddress, dbName, username, password, "1433"))
+    if (dbManager.ConnectToDatabase(dbAddress, dbName, username, password, "1433"))
     {
         LoadUsers();        // loading the first table tab with users info
         LoadSettings();     // loading the second table tab with settings
@@ -50,52 +50,9 @@ MainWindow::MainWindow(const QString &dbAddress, const QString &dbName, const QS
     connect(ui->serviceTreeTableWidget, &QTableWidget::itemClicked, this, &MainWindow::OnFactorySelected);
     connect(ui->refreshFtpTableButton, &QPushButton::clicked, this, &MainWindow::LoadServiceTree);
 
-}
-
-// Connect to the database
-bool MainWindow::ConnectToDatabase(const QString &dbAddress, const QString &databaseName, const QString &username, const QString &password, const QString &instanceOrPort)
-{
-    DBConnection = QSqlDatabase::addDatabase("QODBC");
-
-    QString serverAddress;
-    // Check if port/instance is specified
-    if (!instanceOrPort.isEmpty()) {
-        // If a numeric port is specified, add it to the address
-        bool isPort = instanceOrPort.toInt() > 0;
-        if (isPort) {
-            serverAddress = QString("%1,%2").arg(dbAddress, instanceOrPort);
-        } else {
-            // Otherwise, add the instance name
-            serverAddress = QString("%1\\%2").arg(dbAddress, instanceOrPort);
-        }
-    } else {
-        // If no port/instance is specified, we use only the address
-        serverAddress = dbAddress;
-    }
-
-    QString dsn = QString("Driver={SQL Server};Server=%1;Database=%2;UID=%3;PWD=%4;Encrypt=no;TrustServerCertificate=yes;")
-                      .arg(serverAddress, databaseName, username, password);
-    DBConnection.setDatabaseName(dsn);
-
-    if (!DBConnection.open()) {
-        QMessageBox::critical(this, "Fatal Error!",
-                              DBConnection.lastError().text() +
-                                  "\nServer Name: " + serverAddress +
-                                  "\nDatabase Name: " + databaseName);
-        return false;
-    }
-
-    return true;
-}
-
-// Disconnecting from the database
-void MainWindow::DisconnectFromDatabase()
-{
-    if (DBConnection.isOpen())
-    {
-        DBConnection.close();
-    }
-    QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);  // Remove connection
+    ui->userTableWidget->setSortingEnabled(true);
+    ui->userTableWidget->horizontalHeader()->setSectionsClickable(true);
+    connect(ui->userTableWidget->horizontalHeader(), &QHeaderView::sectionClicked, this, &MainWindow::onHeaderClicked);
 }
 
 // Method for loading application settings (also called when the program is launched)
@@ -252,7 +209,6 @@ void MainWindow::updateGroupSetting(bool checked)
 
     qDebug() << "Значение обновлено: " << name << " -> " << (checked ? "1" : "0");
 }
-
 
 // Метод для обновления данных о параметрах в БД
 void MainWindow::OpenEditSettingsDialog()
@@ -735,6 +691,14 @@ void MainWindow::FilterUsers(const QString &searchText)
     }
 }
 
+void MainWindow::onHeaderClicked(int logicalIndex){
+    static bool ascending = true; //  Направление сортировки
+
+    ui->userTableWidget->sortByColumn(logicalIndex, ascending ? Qt::AscendingOrder : Qt::DescendingOrder);
+
+    ascending = !ascending;
+}
+
 // Метод загрузки пользователей (вызывается так же при запуске программы)
 void MainWindow::LoadUsers()
 {
@@ -1109,20 +1073,26 @@ void MainWindow::AddUserToDB()
                     return;
                 }
 
-                // Проверка, что логин заканчивается на "@ua.energy"
-                static const QRegularExpression emailPattern(R"(^[a-zA-Z0-9._%+-]+@ua\.energy$)");
+                static const QRegularExpression standartEmailPattern(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
 
-                if (!emailPattern.match(userLogin).hasMatch())
-                {
-                    userLoginEdit->setStyleSheet("border: 1px solid red;");
-                    errorLabel->setText("Логін має бути у форматі:\nname@ua.energy");
-                    errorLabel->setVisible(true);
+                if(standartEmailPattern.match(userLogin).hasMatch()){
+                    // Проверка, что логин заканчивается на "@ua.energy"
+                    static const QRegularExpression emailPattern(R"(^[a-zA-Z0-9._%+-]+@ua\.energy$)");
+
+                    if (!emailPattern.match(userLogin).hasMatch())
+                    {
+                        QMessageBox::StandardButton reply;
+                        reply = QMessageBox::question(this, "Увага!", "Ви намагаєтесь створити користувача з доменом, який не схожий на '@ua.energy'. "
+                                                                      "Ви впевнені що хочете продовжити?",
+                                                      QMessageBox::Yes | QMessageBox::No);
+
+                        if(reply == QMessageBox::No){
+                            return;
+                        }
+                    }
+                } else {
+                    QMessageBox::warning(this, "Увага", "Логін, який ви ввели не схожий на пошту. Перевірте правильність.");
                     return;
-                }
-                else
-                {
-                    userLoginEdit->setStyleSheet("");  // Сбрасываем стиль при успешной проверке
-                    errorLabel->setVisible(false);     // Скрываем сообщение об ошибке
                 }
 
                 // Проверка на выбор объектов
@@ -1370,11 +1340,20 @@ void MainWindow::DeleteUser()
 void MainWindow::SelectObjects()
 {
     QSqlQuery query;
+    QString command = R"(
+        SELECT
+            [id],
+            LEFT([unit], CHARINDEX('-', [unit] + '-') - 1) AS [territorially],
+            CASE
+                WHEN CHARINDEX('-', [unit]) > 0
+                THEN SUBSTRING([unit], CHARINDEX('-', [unit]) + 1, LEN([unit]))
+                ELSE ''
+            END AS [unit],
+            [substation]
+        FROM
+            [ReconDB].[dbo].[units]
+    )";
 
-    // Исправленный SQL-запрос для получения всех предприятий и их подстанций
-    QString command = "SELECT [unit], [substation] "
-                      "FROM [ReconDB].[dbo].[units] "
-                      "ORDER BY [unit], [substation]";
     query.prepare(command);
 
     if (!query.exec())
@@ -1383,94 +1362,120 @@ void MainWindow::SelectObjects()
         return;
     }
 
-    // Создаем диалог для выбора объектов
     QDialog dialog(this);
     dialog.setWindowTitle("Вибір об'єктів");
-
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
-
-    // Используем QTreeWidget для организации объектов по предприятиям
     QTreeWidget *treeWidget = new QTreeWidget;
     treeWidget->setHeaderHidden(true);
     treeWidget->setSelectionMode(QAbstractItemView::MultiSelection);
 
-    QMap<QString, QTreeWidgetItem*> unitMap;
+    QHash<QString, QHash<QString, QTreeWidgetItem*>> territoryUnitMap;
 
-    while (query.next())
-    {
-        QString unit = query.value(0).toString();       // Предприятие (unit)
-        QString substation = query.value(1).toString(); // Подстанция (substation)
+    while (query.next()) {
+        QString territorially = query.value(1).toString();
+        QString unit = query.value(2).toString();
+        QString substation = query.value(3).toString();
 
-        if (!unitMap.contains(unit))
-        {
-            // Если предприятие не добавлено, добавляем его
-            QTreeWidgetItem *unitItem = new QTreeWidgetItem(treeWidget);
-            unitItem->setText(0, unit);
-            unitMap[unit] = unitItem;
+        // 1. Обработка территориального управления
+        if (!territoryUnitMap.contains(territorially)) {
+            QTreeWidgetItem *territoryItem = new QTreeWidgetItem(treeWidget);
+            territoryItem->setText(0, territorially);
+            territoryUnitMap.insert(territorially, QHash<QString, QTreeWidgetItem*>());
         }
 
-        // Добавляем подстанцию как дочерний элемент предприятия
+        // 2. Получаем хэш предприятий для текущего территориального управления
+        QHash<QString, QTreeWidgetItem*>& unitMap = territoryUnitMap[territorially];
+
+        // 3. Обработка предприятия
+        if (!unitMap.contains(unit)) {
+            // Ищем территориальное управление в дереве
+            QTreeWidgetItem *territoryItem = nullptr;
+            for (int i = 0; i < treeWidget->topLevelItemCount(); ++i) {
+                if (treeWidget->topLevelItem(i)->text(0) == territorially) {
+                    territoryItem = treeWidget->topLevelItem(i);
+                    break;
+                }
+            }
+
+            QTreeWidgetItem *unitItem = new QTreeWidgetItem(territoryItem ? territoryItem : treeWidget->invisibleRootItem());
+            unitItem->setText(0, unit);
+            unitMap.insert(unit, unitItem);
+        }
+
+        // 4. Добавление подстанции
         QTreeWidgetItem *substationItem = new QTreeWidgetItem(unitMap[unit]);
         substationItem->setText(0, substation);
 
-        // Проверяем, если объект уже выбран, выделяем его
-        QString fullObjectName = unit + ". " + substation;
-        if (selectedObjects.contains(fullObjectName))
-        {
+        // 5. Проверка выделения
+        if (selectedObjects.contains(territorially + " - " + unit + ". " + substation)) {
             substationItem->setSelected(true);
         }
     }
 
-    // Подключаем сигнал для обработки изменения выделения элементов
-    connect(treeWidget, &QTreeWidget::itemSelectionChanged, [=]()
+    connect(treeWidget, &QTreeWidget::itemSelectionChanged, [=, &territoryUnitMap]()
     {
-        // Проходим по всем элементам и проверяем, если родитель выбран — выделяем всех детей
-        for (auto unitItem : unitMap)
-        {
-            // Если родительский элемент выбран, выбираем всех дочерних, если не выбран — оставляем состояние дочерних элементов без изменений
-            if (unitItem->isSelected())
-            {
-                for (int i = 0; i < unitItem->childCount(); ++i)
-                {
-                    QTreeWidgetItem *substationItem = unitItem->child(i);
-                    if (!substationItem->isSelected()) // Выделяем только невыделенные
-                    {
-                        substationItem->setSelected(true);
+        // Блокируем сигналы, чтобы избежать рекурсии
+        treeWidget->blockSignals(true);
+
+        // Обрабатываем все элементы дерева
+        QTreeWidgetItemIterator it(treeWidget);
+        while (*it) {
+            QTreeWidgetItem *item = *it;
+
+            // Если это territorially (имеет дочерние элементы unit)
+            if (item->childCount() > 0 && !item->parent()) {
+                if (item->isSelected()) {
+                    // Выделяем все дочерние unit и их substation
+                    for (int i = 0; i < item->childCount(); ++i) {
+                        QTreeWidgetItem *unitItem = item->child(i);
+                        unitItem->setSelected(true);
+
+                        // Выделяем все substation этого unit
+                        for (int j = 0; j < unitItem->childCount(); ++j) {
+                            unitItem->child(j)->setSelected(true);
+                        }
                     }
                 }
             }
+            // Если это unit (имеет дочерние substation)
+            else if (item->childCount() > 0 && item->parent()) {
+                if (item->isSelected()) {
+                    // Выделяем все дочерние substation
+                    for (int j = 0; j < item->childCount(); ++j) {
+                        item->child(j)->setSelected(true);
+                    }
+                }
+            }
+
+            ++it;
         }
+
+        // Разблокируем сигналы
+        treeWidget->blockSignals(false);
     });
 
-    // Добавляем виджет с деревом в диалог
     layout->addWidget(treeWidget);
-
-    // Кнопка OK для подтверждения выбора
     QPushButton *okButton = new QPushButton("OK");
     layout->addWidget(okButton);
     connect(okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
-
     dialog.setLayout(layout);
-    qDebug() << selectedObjects ;
-    // Обрабатываем результат выбора
+
     if (dialog.exec() == QDialog::Accepted)
     {
-        // Очищаем список выбранных объектов
         selectedObjects.clear();
-
         QList<QTreeWidgetItem *> selectedItems = treeWidget->selectedItems();
 
         for (QTreeWidgetItem *item : selectedItems)
         {
-            if (item->childCount() == 0)    // Проверяем, что это подстанция, а не предприятие
+            if (item->childCount() == 0)    // Это подстанция
             {
-                QString unit = item->parent()->text(0);  // Получаем название предприятия
-                QString substation = item->text(0);      // Получаем название подстанции
-
+                QString unit = item->parent()->text(0);
+                QString substation = item->text(0);
                 QString fullObjectName = unit + ". " + substation;
                 selectedObjects.append(fullObjectName);
             }
         }
+        qDebug() << selectedObjects;
     }
 }
 
@@ -1493,21 +1498,48 @@ void MainWindow::UpdateUserStatus(int userID, bool isActive)
 
 // Метод изменения пароля (по кнопке)
 void MainWindow::HandleChangePassword(int userID) {
-    bool ok;
-    QString newPassword = QInputDialog::getText(this, tr("Зміна пароля"),
-                                                tr("Введіть новий пароль:"), QLineEdit::Password,
-                                                "", &ok);
-    QString hashedPassword = hashPassword(newPassword);
-    if (ok && !hashedPassword.isEmpty()) {
-        QSqlQuery query;
-        query.prepare("UPDATE [ReconDB].[dbo].[users] SET [password] = :hashedPassword WHERE [id] = :userID");
-        query.bindValue(":hashedPassword", hashedPassword);  // Лучше использовать хэширование пароля, например, с использованием SHA-256
-        query.bindValue(":userID", userID);
+    QDialog dialog(this);
+    dialog.setWindowTitle("Зміна пароля");
 
-        if (query.exec()) {
-            QMessageBox::information(this, tr("Успішно"), tr("Пароль успішно змінено."));
-        } else {
-            QMessageBox::critical(this, tr("Помилка"), tr("Не вдалося змінити пароль: %1").arg(query.lastError().text()));
+    QVBoxLayout* layout = new QVBoxLayout(&dialog);
+
+    QLabel* label = new QLabel("Введіть новий пароль:");
+    QHBoxLayout* passwordInputLayout = new QHBoxLayout();
+
+    QLineEdit* passwordEdit = new QLineEdit;
+    passwordEdit->setEchoMode(QLineEdit::Password);
+
+    QCheckBox* showPasswordCheckBox = new QCheckBox;
+    connect(showPasswordCheckBox, &QCheckBox::toggled, [=](bool checked){
+        passwordEdit->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
+    });
+
+    passwordInputLayout->addWidget(passwordEdit);
+    passwordInputLayout->addWidget(showPasswordCheckBox);
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    connect(buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+    layout->addWidget(label);
+    layout->addLayout(passwordInputLayout);
+    layout->addWidget(buttonBox);
+
+    if(dialog.exec() == QDialog::Accepted){
+        QString newPassword = passwordEdit->text();
+        QString hashedPassword = hashPassword(newPassword);
+
+        if (!hashedPassword.isEmpty()) {
+            QSqlQuery query;
+            query.prepare("UPDATE [ReconDB].[dbo].[users] SET [password] = :hashedPassword WHERE [id] = :userID");
+            query.bindValue(":hashedPassword", hashedPassword);
+            query.bindValue(":userID", userID);
+
+            if (query.exec()) {
+                QMessageBox::information(this, tr("Успішно"), tr("Пароль успішно змінено."));
+            } else {
+                QMessageBox::critical(this, tr("Помилка"), tr("Не вдалося змінити пароль: %1").arg(query.lastError().text()));
+            }
         }
     }
 }
@@ -1742,44 +1774,8 @@ void MainWindow::LoadServiceTree()
                 << query.value(5).toString()    // Віддалена папка
                 << query.value(7).toString()    // Локальная папка
                 << query.value(9).toString()    // struct_id Для таблицы директорий
-                << query.value(10).toString();  // Минуле підприємство
-
-        // // Логика объединения ячеек
-        // int spanEnterpriseSize = row + 1;
-        // int spanSubstationSize = row + 1;
-        // int spanIpAddressSize  = row + 1;
-        // if (previousEnterprise == rowData[1] && !rowData[1].isEmpty()) {
-        //     spanEnterpriseSize -= previousEnterpriseRow;
-        //     if (spanEnterpriseSize > 1) {
-        //         ui->serviceTreeTableWidget->setSpan(previousEnterpriseRow, 1, spanEnterpriseSize, 1);
-        //     }
-        // } else {
-        //     previousEnterprise = rowData[1];
-        //     previousEnterpriseRow = row;
-        // }
-
-        // // Проверка на одинаковую підстанцію
-        // if (previousSubstation == substationName && !substationName.isEmpty()) {
-        //     spanSubstationSize -= previousSubstationRow;
-        //     if (spanSubstationSize > 1) {
-        //         ui->serviceTreeTableWidget->setSpan(previousSubstationRow, 2, spanSubstationSize, 1); // Об'єкт
-        //     }
-        // } else {
-        //     previousSubstation = substationName;
-        //     previousSubstationRow = row;
-        // }
-
-        // // Проверка на одинаковый IP-адрес
-        // if (previousIpAddress == rowData[4] && !rowData[4].isEmpty()) {
-        //     spanIpAddressSize -= previousIpAddressRow;
-        //     if(spanIpAddressSize > 1){
-        //         ui->serviceTreeTableWidget->setSpan(previousIpAddressRow, 4, row - previousIpAddressRow + 1, 1);
-        //         ui->serviceTreeTableWidget->setSpan(previousIpAddressRow, columnCount - 1, spanIpAddressSize, 1);
-        //     }
-        // } else {
-        //     previousIpAddress = rowData[4];
-        //     previousIpAddressRow = row;
-        // }
+                << query.value(10).toString()   // Минуле підприємство
+                << query.value(6).toString();   // isFourDigits?
 
         bool hasEmptyFields = false;
 
@@ -1799,6 +1795,7 @@ void MainWindow::LoadServiceTree()
             QString ipAddress = rowData[4];
             QString local_path = rowData[6];
             QString struct_id = rowData[7];
+            QString isFourDigitsStr = rowData[9];
 
             // Добавляем строку в таблицу и делаем её видимой
             for (int col = 0; col < rowData.size(); ++col) {
@@ -1829,6 +1826,12 @@ void MainWindow::LoadServiceTree()
                 }
 
                 if (col == 5 && !ipAddress.isEmpty() && item->background().color().name() != "#ffff00") {
+                    if (isFourDigitsStr == "1") {
+                        if (remoteFolder.length() + 1 < 256) {
+                            remoteFolder.insert(1, '1');
+                        }
+                    }
+
                     if (!CheckFtpFolderExists(ipAddress, remoteFolder, ftpLogin, ftpPassword)) {
                         item->setBackground(Qt::red);
                     }
@@ -1950,6 +1953,7 @@ bool MainWindow::CheckFtpConnection(const QString &ipAddress, const QString &rem
 bool MainWindow::CheckFtpFolderExists(const QString &ipAddress, const QString &remoteFolder,
                                       const QString &username, const QString &password)
 {
+    qDebug() << "CheckFtpFolderExists remote Folder: " << remoteFolder;
     CURL* curl;
     CURLcode res;
     bool folderExists = false;
@@ -2697,6 +2701,6 @@ void MainWindow::DeleteAddress(QString unit_id, QLineEdit *ipAddressEdit)
 // Уничтожение объекта "Мейн-окна"(Деструктор)
 MainWindow::~MainWindow()
 {
-    DisconnectFromDatabase();  // Отключение от базы данных перед уничтожением объекта
+    dbManager.DisconnectFromDatabase();  // Отключение от базы данных перед уничтожением объекта
     delete ui;
 }

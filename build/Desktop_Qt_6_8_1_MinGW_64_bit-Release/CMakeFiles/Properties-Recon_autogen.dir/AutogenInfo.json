@@ -339,6 +339,12 @@
 			null
 		],
 		[
+			"C:/development/Projects/Properties-Recon/databasemanager.h",
+			"MU",
+			"EWIEGA46WW/moc_databasemanager.cpp",
+			null
+		],
+		[
 			"C:/development/Projects/Properties-Recon/mainwindow.h",
 			"MU",
 			"EWIEGA46WW/moc_mainwindow.cpp",
@@ -425,6 +431,11 @@
 	[
 		[
 			"C:/development/Projects/Properties-Recon/authorization.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/development/Projects/Properties-Recon/databasemanager.cpp",
 			"MU",
 			null
 		],

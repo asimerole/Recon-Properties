@@ -390,6 +390,7 @@ Properties-Recon_autogen/timestamp: \
 	C:/Qt/6.8.1/mingw_64/include/QtWidgets/QTextEdit \
 	C:/Qt/6.8.1/mingw_64/include/QtWidgets/QTreeWidget \
 	C:/Qt/6.8.1/mingw_64/include/QtWidgets/QVBoxLayout \
+	C:/Qt/6.8.1/mingw_64/include/QtWidgets/QWidget \
 	C:/Qt/6.8.1/mingw_64/include/QtWidgets/qabstractbutton.h \
 	C:/Qt/6.8.1/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
 	C:/Qt/6.8.1/mingw_64/include/QtWidgets/qabstractitemview.h \
@@ -1154,6 +1155,8 @@ Properties-Recon_autogen/timestamp: \
 	C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Release/CMakeFiles/3.29.3/CMakeRCCompiler.cmake \
 	C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Release/CMakeFiles/3.29.3/CMakeSystem.cmake \
 	C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Release/Properties-Recon_autogen/moc_predefs.h \
+	C:/development/Projects/Properties-Recon/databasemanager.cpp \
+	C:/development/Projects/Properties-Recon/databasemanager.h \
 	C:/development/Projects/Properties-Recon/main.cpp \
 	C:/development/Projects/Properties-Recon/mainwindow.cpp \
 	C:/development/Projects/Properties-Recon/mainwindow.h \

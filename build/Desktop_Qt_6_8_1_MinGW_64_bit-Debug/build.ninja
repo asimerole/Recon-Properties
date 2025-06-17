@@ -88,6 +88,14 @@ build CMakeFiles/Properties-Recon.dir/app_icon.rc.obj: RC_COMPILER__Properties-R
   OBJECT_DIR = CMakeFiles\Properties-Recon.dir
   OBJECT_FILE_DIR = CMakeFiles\Properties-Recon.dir
 
+build CMakeFiles/Properties-Recon.dir/databasemanager.cpp.obj: CXX_COMPILER__Properties-Recon_unscanned_Debug C$:/development/Projects/Properties-Recon/databasemanager.cpp || cmake_object_order_depends_target_Properties-Recon
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\Properties-Recon.dir\databasemanager.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/Properties-Recon_autogen/include -IC:/development/vcpkg/installed/x64-windows-static/include -isystem C:/Qt/6.8.1/mingw_64/include/QtCore -isystem C:/Qt/6.8.1/mingw_64/include -isystem C:/Qt/6.8.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.8.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.8.1/mingw_64/include/QtGui -isystem C:/Qt/6.8.1/mingw_64/include/QtSql -isystem C:/Qt/6.8.1/mingw_64/include/QtNetwork -isystem C:/development/vcpkg/installed/x64-windows/include/openssl
+  OBJECT_DIR = CMakeFiles\Properties-Recon.dir
+  OBJECT_FILE_DIR = CMakeFiles\Properties-Recon.dir
+
 build CMakeFiles/Properties-Recon.dir/Properties-Recon_autogen/EWIEGA46WW/qrc_resources.cpp.obj: CXX_COMPILER__Properties-Recon_unscanned_Debug C$:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Debug/Properties-Recon_autogen/EWIEGA46WW/qrc_resources.cpp || cmake_object_order_depends_target_Properties-Recon
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\Properties-Recon.dir\Properties-Recon_autogen\EWIEGA46WW\qrc_resources.cpp.obj.d
@@ -104,7 +112,7 @@ build CMakeFiles/Properties-Recon.dir/Properties-Recon_autogen/EWIEGA46WW/qrc_re
 #############################################
 # Link the executable Properties-Recon.exe
 
-build Properties-Recon.exe: CXX_EXECUTABLE_LINKER__Properties-Recon_Debug CMakeFiles/Properties-Recon.dir/Properties-Recon_autogen/mocs_compilation.cpp.obj CMakeFiles/Properties-Recon.dir/main.cpp.obj CMakeFiles/Properties-Recon.dir/mainwindow.cpp.obj CMakeFiles/Properties-Recon.dir/authorization.cpp.obj CMakeFiles/Properties-Recon.dir/app_icon.rc.obj CMakeFiles/Properties-Recon.dir/Properties-Recon_autogen/EWIEGA46WW/qrc_resources.cpp.obj | C$:/Qt/6.8.1/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.8.1/mingw_64/lib/libQt6Sql.a C$:/Qt/6.8.1/mingw_64/lib/libQt6Network.a C$:/development/vcpkg/installed/x64-windows/debug/lib/libssl.lib C$:/development/vcpkg/installed/x64-windows/debug/lib/libcrypto.lib C$:/Qt/6.8.1/mingw_64/lib/libQt6Gui.a C$:/Qt/6.8.1/mingw_64/lib/libQt6Core.a C$:/Qt/6.8.1/mingw_64/lib/libQt6EntryPoint.a || Properties-Recon_autogen Properties-Recon_autogen_timestamp_deps
+build Properties-Recon.exe: CXX_EXECUTABLE_LINKER__Properties-Recon_Debug CMakeFiles/Properties-Recon.dir/Properties-Recon_autogen/mocs_compilation.cpp.obj CMakeFiles/Properties-Recon.dir/main.cpp.obj CMakeFiles/Properties-Recon.dir/mainwindow.cpp.obj CMakeFiles/Properties-Recon.dir/authorization.cpp.obj CMakeFiles/Properties-Recon.dir/app_icon.rc.obj CMakeFiles/Properties-Recon.dir/databasemanager.cpp.obj CMakeFiles/Properties-Recon.dir/Properties-Recon_autogen/EWIEGA46WW/qrc_resources.cpp.obj | C$:/Qt/6.8.1/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.8.1/mingw_64/lib/libQt6Sql.a C$:/Qt/6.8.1/mingw_64/lib/libQt6Network.a C$:/development/vcpkg/installed/x64-windows/debug/lib/libssl.lib C$:/development/vcpkg/installed/x64-windows/debug/lib/libcrypto.lib C$:/Qt/6.8.1/mingw_64/lib/libQt6Gui.a C$:/Qt/6.8.1/mingw_64/lib/libQt6Core.a C$:/Qt/6.8.1/mingw_64/lib/libQt6EntryPoint.a || Properties-Recon_autogen Properties-Recon_autogen_timestamp_deps
   FLAGS = -DQT_QML_DEBUG -g
   LINK_FLAGS = -mwindows
   LINK_LIBRARIES = C:/Qt/6.8.1/mingw_64/lib/libQt6Widgets.a  C:/Qt/6.8.1/mingw_64/lib/libQt6Sql.a  C:/Qt/6.8.1/mingw_64/lib/libQt6Network.a  -lcurl  C:/development/vcpkg/installed/x64-windows/debug/lib/libssl.lib  C:/development/vcpkg/installed/x64-windows/debug/lib/libcrypto.lib  C:/Qt/6.8.1/mingw_64/lib/libQt6Gui.a  -ld3d11  -ldxgi  -ldxguid  -ld3d12  C:/Qt/6.8.1/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -lmingw32  C:/Qt/6.8.1/mingw_64/lib/libQt6EntryPoint.a  -lshell32  -lws2_32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32

@@ -391,6 +391,7 @@ C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Rel
   C:/Qt/6.8.1/mingw_64/include/QtWidgets/QTextEdit \
   C:/Qt/6.8.1/mingw_64/include/QtWidgets/QTreeWidget \
   C:/Qt/6.8.1/mingw_64/include/QtWidgets/QVBoxLayout \
+  C:/Qt/6.8.1/mingw_64/include/QtWidgets/QWidget \
   C:/Qt/6.8.1/mingw_64/include/QtWidgets/qabstractbutton.h \
   C:/Qt/6.8.1/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
   C:/Qt/6.8.1/mingw_64/include/QtWidgets/qabstractitemview.h \
@@ -925,6 +926,7 @@ C:/development/Projects/Properties-Recon/build/Desktop_Qt_6_8_1_MinGW_64_bit-Rel
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/ws2tcpip.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wtypes.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wtypesbase.h \
+  C:/development/Projects/Properties-Recon/databasemanager.h \
   C:/development/vcpkg/installed/x64-windows-static/include/curl/curl.h \
   C:/development/vcpkg/installed/x64-windows-static/include/curl/curlver.h \
   C:/development/vcpkg/installed/x64-windows-static/include/curl/easy.h \

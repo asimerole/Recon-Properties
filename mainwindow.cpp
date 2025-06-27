@@ -1681,30 +1681,41 @@ void MainWindow::LoadServiceTree()
     ui->serviceTreeTableWidget->setHorizontalHeaderLabels(QStringList()
                                                           << "unit_id" << "Підприємство" << "Об'єкт" << "№ рекона"
                                                           << "IP адреса сервера" << "Віддалена папка" << "Локальная папка" << "struct_id"
-                                                          << "Минуле підприємство" << "Чотирьохзначний?" << "Активний/неактивний");
+                                                          << "Чотирьохзначний?"  << "Збирати?" << "Активний/неактивний" << "Минуле підприємство");
 
     // SQL-запрос для получения данных
-    QSqlQuery query("SELECT U.[id] AS [unit_id], "
-                    "U.[unit] AS [Підприємство], "
-                    "U.[substation] AS [Об'єкт], "
-                    "S.[recon_id] AS [№ рекона], "
-                    "FS.[IP_addr] AS [IP адреса сервера], "
-                    "FD.[remote_path] AS [Віддалена папка], "
-                    "FD.[isFourDigits] AS [Чотирьохзначний?], "
-                    "S.[files_path] AS [Локальна папка], "
-                    "FS.[status] AS [Статус], "
-                    "S.[id] AS [struct_id],"
-                    "FS.[previous_unit] AS [Минуле підприємство],"
-                    "FS.[login] AS [IP адреса сервера], "
-                    "FS.[password] AS [IP адреса сервера] "
-                    "FROM [ReconDB].[dbo].[units] U "
-                    "JOIN [ReconDB].[dbo].[struct_units] SU ON U.[id] = SU.[unit_id] "
-                    "JOIN [ReconDB].[dbo].[struct] S ON SU.[struct_id] = S.[id] "
-                    "LEFT JOIN [ReconDB].[dbo].[FTP_servers] FS ON U.[id] = FS.[unit_id] "
-                    "LEFT JOIN [ReconDB].[dbo].[FTP_Directories] FD ON S.[id] = FD.[struct_id]"
-                    "ORDER BY U.[unit], FS.[IP_addr]");
+    QSqlQuery query(R"(
+        SELECT U.[id] AS [unit_id],
+            U.[unit] AS [Підприємство],
+            U.[substation] AS [Об'єкт],
+            CASE
+                WHEN ReconCount.[cnt] > 1 THEN S.[object]
+                ELSE CAST(S.[recon_id] AS NVARCHAR)
+            END AS [№ рекона або назва об'єкта],
+            FS.[IP_addr] AS [IP адреса сервера],
+            FD.[remote_path] AS [Віддалена папка],
+            FD.[isFourDigits] AS [Чотирьохзначний?],
+            FD.[isActiveDir] AS [Активна дерикторія?],
+            S.[files_path] AS [Локальна папка],
+            FS.[status] AS [Статус],
+            S.[id] AS [struct_id],
+            FS.[previous_unit] AS [Минуле підприємство],
+            FS.[login] AS [пароль сервера],
+            FS.[password] AS [логін сервера]
+            FROM [ReconDB].[dbo].[units] U
+            JOIN [ReconDB].[dbo].[struct_units] SU ON U.[id] = SU.[unit_id]
+            JOIN [ReconDB].[dbo].[struct] S ON SU.[struct_id] = S.[id]
+            LEFT JOIN [ReconDB].[dbo].[FTP_servers] FS ON U.[id] = FS.[unit_id]
+            LEFT JOIN [ReconDB].[dbo].[FTP_Directories] FD ON S.[id] = FD.[struct_id]
+            LEFT JOIN (
+                SELECT recon_id, COUNT(*) AS cnt
+                FROM [ReconDB].[dbo].[struct]
+                GROUP BY recon_id
+            ) ReconCount ON S.recon_id = ReconCount.recon_id
+            ORDER BY U.[unit], FS.[IP_addr]
+    )");
 
-    bool showOnlyFilled = ui->filledParamsCheck->isChecked(); // Проверка состояния чекбокса
+    bool showOnlyFilled = ui->filledParamsCheck->isChecked(); // Checkbox status (isChecked?)
 
     // Переменные для отслеживания предыдущих значений и строк для объединения
     int previousEnterpriseRow = -1;
@@ -1724,30 +1735,33 @@ void MainWindow::LoadServiceTree()
 
         QString enterpriseName = query.value(1).toString();
         QString substationName = query.value(2).toString();
-
-        int statusCode = query.value(8).toInt();
-
-        QString ftpLogin = query.value(11).toString();
-        QString ftpPassword = query.value(12).toString();
-
-        // Создаем чекбокс для 4-x значных регистраторов, если его еще нет
+        QString ipAddress = query.value(4).toString();
         QString remotePath = query.value(5).toString();
         int isFourDigitsRes = query.value(6).toInt();
-        QCheckBox *isFourDigits = nullptr;
+        int isActiveFtpDirRes = query.value(7).toInt();
+        int statusCode = query.value(9).toInt();
+        int struct_id = query.value(10).toInt();
+        QString ftpPassword = query.value(12).toString();
+        QString ftpLogin = query.value(13).toString();
 
+        // Create checkbox for 4-digit registrars, if it does not exist yet
+        QCheckBox *isFourDigits = nullptr;
         isFourDigits = new QCheckBox();
         isFourDigits->setChecked(isFourDigitsRes == 1);
-        // isFourDigits->setEnabled(statusCode != 2);
-
         connect(isFourDigits, &QCheckBox::checkStateChanged, [this, remotePath](int state) {
             UpdateFourDigitsStatus(remotePath, state == Qt::Checked);
         });
 
-        // ipCheckBoxes[ipAddress] = isServerOnCheck;
+        // Create checkbox for active ftp dirs
+        QCheckBox *isActiveFtpDir = nullptr;
+        isActiveFtpDir = new QCheckBox();
+        isActiveFtpDir->setChecked(isActiveFtpDirRes == 1);
 
+        connect(isActiveFtpDir, &QCheckBox::checkStateChanged, [this, remotePath, struct_id](int state) {
+            UpdateActiveFtpDir(remotePath, struct_id, state == Qt::Checked);
+        });
 
-        // Создаем чекбокс для айпи, если его еще нет
-        QString ipAddress = query.value(4).toString();
+        // Create checkbox for ip, if it doesn't exist yet
         QCheckBox *isServerOnCheck = nullptr;
 
         if (!ipCheckBoxes.contains(ipAddress)) {
@@ -1755,7 +1769,7 @@ void MainWindow::LoadServiceTree()
             isServerOnCheck->setChecked(statusCode == 1);
             isServerOnCheck->setEnabled(statusCode != 2);
 
-            connect(isServerOnCheck, &QCheckBox::checkStateChanged, [this, ipAddress](int state) {
+            connect(isServerOnCheck, &QCheckBox::checkStateChanged, [this, ipAddress, struct_id](int state) {
                 UpdateFactoryStatus(ipAddress, state == Qt::Checked);
             });
 
@@ -1764,18 +1778,19 @@ void MainWindow::LoadServiceTree()
             isServerOnCheck = ipCheckBoxes[ipAddress];
         }
 
-        // Заполнение данных
+        // Fill data
         QStringList rowData;
         rowData << query.value(0).toString()    // ID
-                << query.value(1).toString()    // Підприємство
-                << query.value(2).toString()    // Об'єкт
+                << enterpriseName               // Підприємство
+                << substationName               // Об'єкт
                 << query.value(3).toString()    // № рекона
-                << query.value(4).toString()    // IP адреса сервера
-                << query.value(5).toString()    // Віддалена папка
-                << query.value(7).toString()    // Локальная папка
-                << query.value(9).toString()    // struct_id Для таблицы директорий
-                << query.value(10).toString()   // Минуле підприємство
-                << query.value(6).toString();   // isFourDigits?
+                << ipAddress                    // IP адреса сервера
+                << remotePath                   // Віддалена папка
+                << query.value(8).toString()    // Локальная папка
+                << query.value(10).toString()   // struct_id Для таблицы директорий
+                << query.value(6).toString()    // isFourDigits?
+                << query.value(7).toString()    // isActiveFtpDir?
+                << query.value(11).toString();  // Минуле підприємство
 
         bool hasEmptyFields = false;
 
@@ -1791,22 +1806,24 @@ void MainWindow::LoadServiceTree()
         if (showOnlyFilled && hasEmptyFields) {
             ui->serviceTreeTableWidget->setRowHidden(row, true);
         } else {
-            QString remoteFolder = rowData[5];
-            QString ipAddress = rowData[4];
-            QString local_path = rowData[6];
-            QString struct_id = rowData[7];
-            QString isFourDigitsStr = rowData[9];
+            QString ipAddress           = rowData[4];
+            QString remoteFolder        = rowData[5];
+            QString isFourDigitsStr     = rowData[6];
+            QString isActiveFtpDirStr   = rowData[7];
+            QString local_path          = rowData[8];
+
 
             // Добавляем строку в таблицу и делаем её видимой
             for (int col = 0; col < rowData.size(); ++col) {
                 QTableWidgetItem *item = new QTableWidgetItem(rowData[col]);
 
+
                 // if(col == 1 || col == 2){
                 //     AddTextWithButton(row, col, rowData[col]);
                 // }
 
-                // Скрываем столбец с ID, local_path и struct_id
-                if (col == 0 || col == 6 || col == 7 || col == 8) {
+                // Hide column with ID, local_path, struct_id
+                if (col == 0 || col == 6 || col == 7) {
                     ui->serviceTreeTableWidget->setColumnHidden(col, true);
                 }
 
@@ -1820,7 +1837,7 @@ void MainWindow::LoadServiceTree()
                 }
 
                 // Устанавливаем элементы, кроме последней колонки (где чекбокс)
-                if (col < columnCount - 2) {
+                if (col < columnCount - 3) {
                     item->setFlags(item->flags() & ~Qt::ItemIsEditable);
                     ui->serviceTreeTableWidget->setItem(row, col, item);
                 }
@@ -1837,8 +1854,11 @@ void MainWindow::LoadServiceTree()
                     }
                 }
             }
-            // Добавляем чекбокс четырёхзначиных реконов
-            ui->serviceTreeTableWidget->setCellWidget(row, columnCount - 2, isFourDigits);
+            // Add checkbox four-digits recons
+            ui->serviceTreeTableWidget->setCellWidget(row, columnCount - 3, isFourDigits);
+
+            // Add checkbox
+            ui->serviceTreeTableWidget->setCellWidget(row, columnCount - 2, isActiveFtpDir);
 
             // Добавляем чекбокс в последнюю колонку
             ui->serviceTreeTableWidget->setCellWidget(row, columnCount - 1, isServerOnCheck);
@@ -1865,14 +1885,32 @@ void MainWindow::LoadServiceTree()
 
 void MainWindow::FillMissingData()
 {
+    structIdToReconId.clear();
+
+    QSqlQuery query;
+    if (query.exec("SELECT id, recon_id FROM [ReconDB].[dbo].[struct]"))
+    {
+        while (query.next())
+        {
+            int id = query.value(0).toInt();               // struct_id
+            QString reconId = query.value(1).toString();   // recon_id
+            structIdToReconId[id] = reconId;
+        }
+    }
+    else
+    {
+        qDebug() << "Error executing request: " << query.lastError().text();
+    }
+
     for (int row = 0; row < ui->serviceTreeTableWidget->rowCount(); ++row)
     {
         QTableWidgetItem *remotePathItem = ui->serviceTreeTableWidget->item(row, 5);        // "Віддалена папка"
         if (remotePathItem && remotePathItem->text().isEmpty())
         {
-            QString struct_id = ui->serviceTreeTableWidget->item(row, 7)->text();           // struct_id
+            int struct_id = ui->serviceTreeTableWidget->item(row, 7)->text().toInt();       // struct_id
             QString local_path = ui->serviceTreeTableWidget->item(row, 6)->text();          // Локальная папка
-            QString remote_path = "R" + ui->serviceTreeTableWidget->item(row, 3)->text();   // № рекона
+
+            QString remote_path = "R" + structIdToReconId.value(struct_id, "UNKNOWN");      // remote_path
 
             InsertDirValue(struct_id, remote_path, local_path);
 
@@ -1882,7 +1920,7 @@ void MainWindow::FillMissingData()
     }
 }
 
-void MainWindow::InsertDirValue(QString struct_id, QString remote_path, QString local_path)
+void MainWindow::InsertDirValue(int struct_id, QString remote_path, QString local_path)
 {
     QSqlQuery query;
     query.prepare(R"(
@@ -1954,6 +1992,9 @@ bool MainWindow::CheckFtpFolderExists(const QString &ipAddress, const QString &r
                                       const QString &username, const QString &password)
 {
     qDebug() << "CheckFtpFolderExists remote Folder: " << remoteFolder;
+    qDebug() << "CheckFtpFolderExists ipAddress: " << ipAddress;
+    qDebug() << "CheckFtpFolderExists username: " << username;
+    qDebug() << "CheckFtpFolderExists password: " << password;
     CURL* curl;
     CURLcode res;
     bool folderExists = false;
@@ -2000,7 +2041,7 @@ void MainWindow::OnFactorySelected(QTableWidgetItem *item)
 
         // Получаем данные всей строки
         QStringList rowData;
-        for (int i = 0; i < ui->serviceTreeTableWidget->columnCount() - 2; ++i)
+        for (int i = 0; i < ui->serviceTreeTableWidget->columnCount() - 3; ++i)
         {
             rowData << ui->serviceTreeTableWidget->item(selectedRow, i)->text();
         }
@@ -2036,6 +2077,21 @@ void MainWindow::UpdateFourDigitsStatus(const QString& remotePath, bool isTrue){
         qDebug() << "Eror in function 'UpdateFourDigitsStatus' for remotePath: " << remotePath << query.lastError();
     } else {
         qDebug() << "UpdateFourDigitsStatus was succusfull finished!" << query.lastQuery();
+    }
+}
+
+void MainWindow::UpdateActiveFtpDir(const QString& remotePath, int struct_id, bool isTrue){
+    qDebug() << "UpdateActiveFtpDir was started! Remote path: " + remotePath;
+    QSqlQuery query;
+
+    query.prepare("UPDATE [ReconDB].[dbo].[FTP_Directories] SET [isActiveDir] = :isTrue WHERE remote_path = :remotePath AND struct_id = :struct_id");
+    query.bindValue(":remotePath", remotePath);
+    query.bindValue(":struct_id", struct_id);
+    query.bindValue(":isTrue", isTrue ? 1 : 0);
+    if(!query.exec()){
+        qDebug() << "Eror in function 'UpdateActiveFtpDir' for remotePath: " << remotePath << query.lastError();
+    } else {
+        qDebug() << "UpdateActiveFtpDir was succusfull finished!" << query.lastQuery();
     }
 }
 

@@ -157,6 +157,9 @@ private slots:
     // Status update for four-digit folders (registrars)
     void UpdateFourDigitsStatus(const QString& remotePath, bool isTrue);
 
+    // Status update for active ftp dirs
+    void UpdateActiveFtpDir(const QString& remotePath, int struct_id, bool isTrue);
+
     // Updating IP parameters
     void UpdateIpParams(int &unit_id, QString &ipAddress, QString &prevIP, QString &ipLogin, QString &ipPassword, QString &struct_id,
                         QString &remotePath, QString &localPath, QString &previousUnit, bool isMultiple);
@@ -186,7 +189,7 @@ private slots:
     void DeleteAddress(QString unit_id, QLineEdit *ipAddressEdit);
 
     // Insert directory on remote server (runs mostly for all rows in FTP server list table)
-    void InsertDirValue(QString struct_id, QString remote_path, QString local_path);
+    void InsertDirValue(int struct_id, QString remote_path, QString local_path);
 
     // Filling in empty fields (most often for remote directories)
     void FillMissingData();
@@ -199,6 +202,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QStringList selectedObjects;
+
+    QMap<int, QString> structIdToReconId;
 
     // Managers
     DatabaseManager dbManager;
